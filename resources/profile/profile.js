@@ -4,13 +4,15 @@
  */
 var myCodeDiv = $('#myCodeSession');
 var shareCodeDiv = $('#sharedCodeSession');
-var settingDiv = $('#settingSession');
 var helpDiv = $('#helpSession');
 
 $(document).ready(function(){
-    shareCodeDiv.detach();
-    helpDiv.detach();
-    settingDiv.detach();
+    shareCodeDiv.hide();
+    helpDiv.hide();
+    
+    function showModal(modal){
+        $(modal).modal(options);
+    }
     
 //   document.getElementById("myCodeSession").style.visibility ="hidden";
 //   document.getElementById("sharedCodeSession").style.visibility ="visibility";
@@ -18,33 +20,28 @@ $(document).ready(function(){
 //   document.getElementById("helpSession").style.visibility ="hidden";
 });
 
-$('#myCode').on("click",function(){
+$('#myCode').click(function(){
    
-   shareCodeDiv.detach();
-   helpDiv.detach();
-   settingDiv.detach();
+   shareCodeDiv.hide();
+   helpDiv.hide();
    $('.tools').after(myCodeDiv);
 });
 
-$('#sharedCode').on("click",function(){
+$('#sharedCode').click(function(){
     
    myCodeDiv.detach();
    helpDiv.detach();
-   settingDiv.detach();
+   shareCodeDiv.show();
    $('.tools').after(shareCodeDiv);
 });
 
-$('#settings').on("click",function(){
+$('#help').click(function(){
    myCodeDiv.detach();
-   helpDiv.detach();
-   shareCodeDiv.detach();
-   $('.tools').after(settingDiv);
-});
-
-$('#help').on("click",function(){
-   myCodeDiv.detach();
-   shareCodeDiv.detach();
-   settingDiv.detach();
+   shareCodeDiv.hide();
+   helpDiv.show();
    $('.tools').after(helpDiv);
 });
 
+//$('#abb').click(function(){
+//   shareCodeDiv.show();
+//});

@@ -106,6 +106,7 @@ var runContext = function(input, ctx, ok, err) {
 /* Code Mirror
  ******************************************************************************/
 var doc = CodeMirror(document.getElementById('input'), {
+    'value': codeMirrorText,
     'mode': 'javascript',
     'lineNumbers': true
 }).doc;
@@ -229,6 +230,10 @@ var globalCtx = interpret.complete(
     function(x) { return x },
     function(x) { return x });
 
+var setDocValue = function(val){
+    doc.setValue(val);
+}
+
 $(function(){
     var stopButton = $('button#stop-button'),
         runButton = $('button#run-button'),
@@ -238,6 +243,30 @@ $(function(){
     
     $('#container').layout();
 
+    $('#refresh-button').click(function(){
+       doc.setValue(codeMirrorText); 
+    });
+    
+    $('#save-button')
+                .click(function(){
+                    $('#saveModal').modal('show');
+                    document.getElementById('saveText').innerHTML = doc.getValue();
+                    var title = document.getElementById('saveTitle').value;
+                    if(title == ''){
+                        document.getElementById('sessionFlag').innerHTML = 'New';
+                    }else{
+                        document.getElementById('sessionFlag').innerHTML = 'Save';
+                    }
+                });
+    
+    $('#share-button')
+        .click(function(){
+            var url = window.location.href.split('?');
+            document.getElementById('shareLink').value = url[0].concat("?").concat(url[1]);
+            $('#shareModal').modal('show');
+            
+        });
+    
     $('button#eval-button')
         .button()
         .click(function(e){

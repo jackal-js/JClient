@@ -21,12 +21,12 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="index.html#">Jackal</a>
+                    <a class="navbar-brand" href="index.html">Jackal</a>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <!-- TODO: temporary  -->
-                        <li><a href="console.html">Welcome, {{user.name}}!</a></li>
+                        <li><a href="#">Welcome, {{user.name}}!</a></li>
                         <li><a ng-click="logout()" style="font-size: 1em;">Log out</a></li>
                     </ul>
                 </div>
@@ -39,7 +39,7 @@
                     <ul class="side-bar-items">
                         <li><a href="javascript:void(0)" id="myCode">My Code <span class="glyphicon glyphicon-chevron-right"></span></a></li>
                         <li><a href="javascript:void(0)" id="sharedCode">Shared Code <span class="glyphicon glyphicon-chevron-right"></span></a></li>
-                        <li><a href="javascript:void(0)" id="help">Help <span class="glyphicon glyphicon-chevron-right"></span></a></li>
+                        <li><a href="javascript:void(0)" id="help">Help <span class="glyphicon glyphicon-chevron-right"></span></a></li>        
                     </ul>
                 </div>
                 
@@ -58,22 +58,36 @@
                     <div class="" id="myCodeSession">
                         <h2>My Code</h2>
                         <hr>
-                        <div class="file-row row" ng-repeat="session in sessions">
-                            <p class="col-md-3 title">{{session.title}}</p>
-                            <p class="col-md-3">Last edited yesterday</p>
-                            <p class="col-md-4 col-md-offset-1 fork-detail">Forked from someoneImportant022</p>
-                            <span class="col-md-1 glyphicon glyphicon-info-sign"></span>
+                        <div class="file-row row" ng-repeat="session in myPrivateSessions">
+                            <p class="col-md-3 title"><a href="console.html?{{session.$id}}?{{user.uid}}">{{session.title}}</a></p>
+                            <p class="col-md-4">Last edited {{session.lastChanged | date:'short'}}</p>
+                            <p class="col-md-4  fork-detail">Forked from someoneImportant022</p>
+                            <button type="button" data-toggle="modal" data-target="#editModal" class="btn btn-default btn-sm" ng-click="setActive(session.$id, session, false)">
+                                <span class="glyphicon glyphicon-info-sign" ></span>
+                            </button>
                         </div>
+                        <div class="file-row row" ng-repeat="session in myPublicSessions">
+                            <p class="col-md-3 title"><a href="console.html?{{session.$id}}?{{user.uid}}">{{session.title}}</a></p>
+                            <p class="col-md-4">Last edited {{session.lastChanged | date:'short'}}</p>
+                            <p class="col-md-4  fork-detail">Forked from someoneImportant022</p>
+                            <button type="button" data-toggle="modal" data-target="#editModal" class="btn btn-default btn-sm" ng-click="setActive(session.$id, session, true)">
+                                <span class="glyphicon glyphicon-info-sign" ></span>
+                            </button>
+                        </div>
+                        
                     </div>
+                    
                     
                     <div class="" id="sharedCodeSession">
                         <h2>Shared Code</h2>
                         <hr>
-                        <div class="file-row row">
-                            <p class="col-md-3 title">Atum</p>
-                            <p class="col-md-3">Last edited Sept. 16</p>
-                            <p class="col-md-4 col-md-offset-1 fork-detail">Forked from someoneImportant021</p>
-                            <span class="col-md-1 glyphicon glyphicon-info-sign"></span>
+                        <div class="file-row row" ng-repeat="session in myPublicSessions">
+                            <p class="col-md-3 title"><a href="console.html?{{session.$id}}?{{user.uid}}">{{session.title}}</a></p>
+                            <p class="col-md-4">Last edited {{session.lastChanged | date:'short'}}</p>
+                            <p class="col-md-4 fork-detail">Forked from someoneImportant021</p>
+                            <button type="button" data-toggle="modal" data-target="#editModal" class="btn btn-default btn-sm" ng-click="setActive(session.$id, session, true)">
+                                <span class="glyphicon glyphicon-info-sign" ></span>
+                            </button>
                         </div>
                     </div>
                   
@@ -82,12 +96,38 @@
                         <hr>
                     </div>
                 </div>
+               
+                <!-- Modal -->
+                
+                <div class="modal fade" id="editModal" tabindex="-1" role="dialog" >
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h3 class="modal-title">Edit</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group">
+                                <span class="input-group-addon">Title</span>
+                                <input type="text" class="form-control" ng-model="active.title">
+                            </div>
+                            <input type="checkbox" ng-model="active.public"> Public
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-defualt btn-sm" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary btn-sm" ng-click="saveSession()" data-dismiss="modal">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
             </div>
         </div>
         
         
         <script type="application/javascript" src="/resources/bootstrap/js/jquery.js" ></script>
         <script type="application/javascript" src="/resources/bootstrap/js/bootstrap.js" ></script>
+        <script type="application/javascript" src="/resources/bootstrap/js/bootstrap.min.js"></script>
         <script type="application/javascript" src="/resources/profile/profile.js" ></script>
         
         <script type="application/javascript" src="/resources/server/angular.js"></script>
@@ -95,5 +135,11 @@
 	<script src="https://cdn.firebase.com/v0/firebase-simple-login.js"></script>
 	<script src='https://cdn.firebase.com/libs/angularfire/0.3.0/angularfire.min.js'></script>
         <script type="application/javascript" src="/resources/server/app.js"></script>
+        
+        <script>
+            $('#help').click(function(){
+                console.log("a");
+            });
+        </script>
     </body>
 </html>
