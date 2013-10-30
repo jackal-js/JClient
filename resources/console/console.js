@@ -113,7 +113,7 @@ var doc = CodeMirror(document.getElementById('input'), {
 
 var interactive = CodeMirror(document.getElementById('output-interactive-textarea'), {
     'mode': 'javascript',
-    'lineNumbers': false,
+    'lineNumbers': false
 });
 interactive.setSize(null, 20);
 interactive.on('beforeChange', function(instance, change) {
@@ -232,7 +232,7 @@ var globalCtx = interpret.complete(
 
 var setDocValue = function(val){
     doc.setValue(val);
-}
+};
 
 $(function(){
     var stopButton = $('button#stop-button'),
@@ -246,6 +246,20 @@ $(function(){
     $('#refresh-button').click(function(){
        doc.setValue(codeMirrorText); 
     });
+    
+//    $('#save-button').tooltip(options);
+//    $('#fork-button').tooltip(options);
+//    $('#share-button').tooltip(options);
+//    $('#print-button').tooltip(options);
+//    $('#refresh-button').tooltip(options);
+//    $('#eval-button').tooltip(options);
+//    $('#debug-button').tooltip(options);
+//    $('#run-button').tooltip(options);
+//    $('#step-button').tooltip(options);
+//    $('#step-out-button').tooltip(options);
+//    $('#step-into-button').tooltip(options);
+//    $('#step-back-button').tooltip(options);
+//    $('#pause-button').tooltip(options);
     
     $('#save-button')
                 .click(function(){

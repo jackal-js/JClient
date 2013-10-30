@@ -77,42 +77,48 @@
                 <div class='workspace cf'>
                     <div class="btn-controls cf">
                     <div class="btn-group">
-                        <button id="save-button" type="button" class="btn btn-default btn-sm" ng-disabled="!user">
+                        <button id="save-button" type="button" class="btn btn-default btn-sm" ng-disabled="!user" data-toggle="tooltip" title="Save">
                             <span class="glyphicon glyphicon-floppy-disk"></span>
                         </button>
-                        <button id="fork-button" type="button" ng-click="test()" class="btn btn-default btn-sm">
+                        <button id="fork-button" type="button" data-toggle="tooltip" title="Fork" ng-click="test()" class="btn btn-default btn-sm">
                             <span class="glyphicon glyphicon-random"></span>
                         </button>
-                        <button id="share-button" type="button" ng-disabled="active.public || !user" class="btn btn-default btn-sm">
+                        <button id="share-button" type="button" ng-disabled="active.public || !user" class="btn btn-default btn-sm" data-toggle="tooltip" title="Share">
                             <span class="glyphicon glyphicon-share"></span>             
                         </button>
-                        <button id="print-button" type="button" class="btn btn-default btn-sm">
+                        <button id="print-button" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Print">
                             <span class="glyphicon glyphicon-print"></span>
                         </button>
-                        <button id="refresh-button" type="button" ng-click="logActive()" class="btn btn-default btn-sm">
+                        <button id="refresh-button" type="button" ng-click="logActive()" class="btn btn-default btn-sm" data-toggle="tooltip" title="Refresh">
                             <span class="glyphicon glyphicon-refresh"></span>
                         </button>
                     </div>
                     <div class="btn-group debugging">
-                        <button id="run-button" type="button" class="btn btn-default btn-sm">
+                        <button id="eval-button" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Eval">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                        <button id="debug-button" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Debug">
+                            <span class="glyphicon glyphicon-wrench"></span>
+                        </button>
+                        <button id="run-button" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Run">
                             <span class="glyphicon glyphicon-play"></span>
                         </button>
-                        <button id="stop-button" type="button" class="btn btn-default btn-sm">
+                        <button id="stop-button" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Stop">
                             <span class="glyphicon glyphicon-stop"></span>
                         </button>
-                        <button id="pause-button" type="button" class="btn btn-default btn-sm">
+                        <button id="pause-button" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Pause">
                             <span class="glyphicon glyphicon-pause"></span>
                         </button>
-                        <button id="step-back-button" type="button" class="btn btn-default btn-sm">
+                        <button id="step-back-button" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Step back">
                             <span class="glyphicon glyphicon-step-backward"></span>
                         </button>
-                        <button id="step-into-button" type="button" class="btn btn-default btn-sm">
+                        <button id="step-into-button" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Step into">
                             <span class="glyphicon glyphicon-arrow-down"></span>
                         </button>
-                        <button id="step-out-button" type="button" class="btn btn-default btn-sm">
+                        <button id="step-out-button" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Step out">
                             <span class="glyphicon glyphicon-share-alt"></span>
                         </button>
-                        <button id="step-button" type="button" class="btn btn-default btn-sm">
+                        <button id="step-button" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Step">
                             <span class="glyphicon glyphicon-step-forward"></span>
                         </button>
                     </div>
@@ -240,7 +246,7 @@
         <script type="application/javascript" src="/resources/server/app.js"></script>
         
         <script>
-            var codeMirrorText = "code";
+            var codeMirrorText = "";
             
         </script>
     </body>
