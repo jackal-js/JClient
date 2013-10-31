@@ -83,7 +83,7 @@
                         <button id="fork-button" type="button" data-toggle="tooltip" title="Fork" ng-click="test()" class="btn btn-default btn-sm">
                             <span class="glyphicon glyphicon-random"></span>
                         </button>
-                        <button id="share-button" type="button" ng-disabled="active.public || !user" class="btn btn-default btn-sm" data-toggle="tooltip" title="Share">
+                        <button id="share-button" type="button" ng-disabled="active.public || !user || !active.title" class="btn btn-default btn-sm" data-toggle="tooltip" title="Share">
                             <span class="glyphicon glyphicon-share"></span>             
                         </button>
                         <button id="print-button" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Print">

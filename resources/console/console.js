@@ -142,15 +142,31 @@ var AtumObject = function(d, x, ctx) {
         var value = data.value().value();
         if (data.value().children().length === 0) {
             if (value && value.type && value.type === 'object') {
+                
                 Object.keys(value.properties).map(function(key) {
-                    data.value().children.push(
-                        new AtumChild(key, new AtumObject(d, value.properties[key].value, ctx)));
+                    if(objectFilter(key)){
+                        console.log(key);
+                        data.value().children.push(
+                            new AtumChild(key, new AtumObject(d, value.properties[key].value, ctx)));
+                    }
                 });
             }
         }
         $('.object-browser').accordion()
             .accordion('refresh');
     };
+};
+
+var objectFilter = function(key) {
+    if(key=='Infinity'||key=='NaN'||key=='undefined'||key=='eval'||key=='parseInt'||key=='Array'||key=='Boolean'||key=='Date'||key=='Error'||
+        key=='EvalError'||key=='RangeError'||key=='ReferenceError'||key=='SyntaxError'||key=='TypeError'||key=='UriError'||key=='Function'||
+        key=='Math'||key=='Number'||key=='Object'||key=='String'||key=='RegExp'||key=='importScripts'||key=='isNaN'||key=='isFinite')
+    {
+        return false;
+    } else {
+        return true;
+    }
+    
 };
 
 var AtumChild = function(key, value) {
@@ -168,6 +184,7 @@ var ConsoleViewModel = function() {
     this.debug = ko.observable();
     
     this.output = ko.observableArray();
+    
     
     this.environments = ko.computed(function(){
         return (self.debug() ?
@@ -247,20 +264,6 @@ $(function(){
        doc.setValue(codeMirrorText); 
     });
     
-//    $('#save-button').tooltip(options);
-//    $('#fork-button').tooltip(options);
-//    $('#share-button').tooltip(options);
-//    $('#print-button').tooltip(options);
-//    $('#refresh-button').tooltip(options);
-//    $('#eval-button').tooltip(options);
-//    $('#debug-button').tooltip(options);
-//    $('#run-button').tooltip(options);
-//    $('#step-button').tooltip(options);
-//    $('#step-out-button').tooltip(options);
-//    $('#step-into-button').tooltip(options);
-//    $('#step-back-button').tooltip(options);
-//    $('#pause-button').tooltip(options);
-    
     $('#save-button')
                 .click(function(){
                     $('#saveModal').modal('show');
@@ -276,7 +279,7 @@ $(function(){
     $('#share-button')
         .click(function(){
             var url = window.location.href.split('?');
-            document.getElementById('shareLink').value = url[0].concat("?").concat(url[1]);
+            document.getElementById('shareLink').value = url[0].concat("?").concat(url[1]).concat("?").concat(url[2]);
             $('#shareModal').modal('show');
             
         });
@@ -284,6 +287,7 @@ $(function(){
     $('button#eval-button')
         .button()
         .click(function(e){
+            document.getElementById('output-console').innerHTML="";
             run(doc.getValue(), out.write, errorOut.write);
                 $('.object-browser')
                     .accordion({
@@ -294,6 +298,10 @@ $(function(){
     
     $('.object-browser')
         .accordion();
+
+    $('button#print-button').click(function(){
+        console.log(ko.observableArray);
+    });
     
     $('button#debug-button')
         .button()
@@ -332,6 +340,7 @@ $(function(){
         .attr("disabled", true)
         .click(function(e) {
             if (model.debug()) {
+                document.getElementById('output-console').innerHTML="";
                 model.run();
             } else {
                 model.finish();

@@ -26,7 +26,8 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <!-- TODO: temporary  -->
-                        <li><a href="#">Welcome, {{user.name}}!</a></li>
+                        <li><a href="#" ng-show="user">Welcome, {{user.name}}!</a></li>
+                        <li><a ng-click="login()" ng-hide="user">Login with Github</a></li>
                         <li><a ng-click="logout()" style="font-size: 1em;">Log out</a></li>
                     </ul>
                 </div>
@@ -116,6 +117,7 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-defualt btn-sm" data-dismiss="modal">Cancel</button>
                             <button type="button" class="btn btn-primary btn-sm" ng-click="saveSession()" data-dismiss="modal">Save</button>
+                            <button type="button" class="btn btn-danger btn-sm" ng-click="removeSession()" data-dismiss="modal">Delete</button> 
                         </div>
                     </div>
                 </div>
