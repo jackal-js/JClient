@@ -16,3 +16,6 @@
 [submodule "dependencies/atum"]
 	path = dependencies/atum
 	url = https://github.com/jackal-js/atum.git
+[submodule "dependencies/amulet"]
+	path = dependencies/amulet
+	url = https://github.com/mattbierner/amulet.git

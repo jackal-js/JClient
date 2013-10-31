@@ -7,6 +7,8 @@ require(['knockout-2.2.1',
         'atum/compute',
         'atum/compute/context',
         'atum/builtin/impl/global',
+        'atum/builtin/operations/global',
+        'atum/operations/object',
         'atum/semantics/semantics',
         'atum/debug/debugger',
         'ecma/lex/lexer',
@@ -18,11 +20,14 @@ function(ko,
         compute,
         context,
         global,
+        global_operations,
+        object,
         semantics,
         atum_debugger,
         lexer,
         parser) {
 
+var map = Function.prototype.call.bind(Array.prototype.map);
 var reduce = Function.prototype.call.bind(Array.prototype.reduce);
 
 var get = function(p, c) {
@@ -106,7 +111,7 @@ var runContext = function(input, ctx, ok, err) {
 /* Code Mirror
  ******************************************************************************/
 var doc = CodeMirror(document.getElementById('input'), {
-    'value': codeMirrorText,
+//    'value': codeMirrorText,
     'mode': 'javascript',
     'lineNumbers': true
 }).doc;
@@ -192,9 +197,18 @@ var ConsoleViewModel = function() {
             []);
     });
     
+//    this.stack = ko.computed(function(){
+//        return (self.debug() && self.debug().ctx.userData ? 
+//            self.debug().ctx.userData.metadata.stack :
+//            [])
+//    });
     this.stack = ko.computed(function(){
         return (self.debug() && self.debug().ctx.userData ? 
-            self.debug().ctx.userData.metadata.stack :
+            ko.utils.arrayMap(self.debug().ctx.userData.metadata.stack, function(x) {
+                return {
+                    'name': (x.func ? self.debug().run(object.get(x.func, 'name'), function(x){ return x.value; }) : '')
+                };
+            }) :
             [])
     });
 };
@@ -240,7 +254,8 @@ ko.applyBindings(model);
 
 var globalCtx = interpret.complete(
     compute.sequence(
-        global.enterGlobal(),
+        global.initialize(),
+        global_operations.enterGlobal(),
         global.initialize(),
         compute.computeContext),
     context.ComputeContext.empty,
