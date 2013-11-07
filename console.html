@@ -47,7 +47,8 @@
     
         <script type="text/html" id="output-template">
             <li class='output-value' data-bind="css: { 'output-error': error }">
-                <div data-bind="template: { name: 'object-template', data: value }"></div>
+                <div data-bind="text: value"></div>
+                <!-- <div data-bind="template: { name: 'object-template', data: value }"></div> -->
             </li>
         </script>
     

@@ -35,11 +35,11 @@ var get = function(p, c) {
  ******************************************************************************/
 var printBindings = function(d, record) {
     if (record.ref) {
-        var obj = run.extract(record, reference.getValue, null);
+        var obj = run.extract(d, reference.getValue(record), null);
         record = obj.properties;
     }
     return Object.keys(record).reduce(function(p, c) {
-        p.push({'name': c, 'value': run.extract(record[c], reference.getValue, null)});
+        p.push({'name': c, 'value': run.extract(d, reference.getValue(record[c]), null)});
         return p;
     }, []);
 };
@@ -51,15 +51,13 @@ var printFrame = function(d, lex) {
     };
 };
 
-var printEnvironments = function(d, ctx) {
+var printEnvironments = function(d) {
     var environments = [];
-    if (ctx.userData) {
-        var environment = run.extract(ctx, context.environment, null);
-        do {
-            environments.push(printFrame(d, environment));
-            environment = run.extract(ctx, context.environment.outer, null);
-        } while (environment);
-    };
+    var environment = run.extract(d, context.environment, null);
+    do {
+        environments.push(printFrame(d, environment));
+        environment = run.extract(d, reference.getValue(environment.outer), null);
+    } while (environment);
     return environments;
 };
 
@@ -145,11 +143,11 @@ var ConsoleViewModel = function() {
     
     this.environments = ko.computed(function(){
         return (self.debug() ?
-            printEnvironments(self.debug(), self.debug().ctx) :
+            printEnvironments(self.debug()) :
             []);
     });
     
-    this.stack = ko.computed(function(){
+    this.stack = [];/*ko.computed(function(){
         return (self.debug() && self.debug().ctx.userData ? 
             ko.utils.arrayMap(self.debug().ctx.userData.metadata.stack, function(x) {
                 return {
@@ -157,34 +155,34 @@ var ConsoleViewModel = function() {
                 };
             }) :
             [])
-    });
+    });*/
 };
 
 ConsoleViewModel.prototype.finish = function() {
-    return this.debug = step.finish(this.debug);
+    return this.debug(step.finish(this.debug()));
 };
 
 ConsoleViewModel.prototype.run = function() {
-    return this.debug = step.run(this.debug);
+    return this.debug(step.run(this.debug()));
 };
 
 ConsoleViewModel.prototype.stepOver = function() {
-    return this.debug = step.stepOver(this.debug);
+    return this.debug(step.stepOver(this.debug()));
 };
 
 ConsoleViewModel.prototype.stepInto = function() {
-    return this.debug = step.step(this.debug);
+    return this.debug(step.step(this.debug()));
 };
 
 ConsoleViewModel.prototype.stepOut = function() {
-    return this.debug = step.stepOut(this.debug);
+    return this.debug(step.stepOut(this.debug()));
 };
 
 ConsoleViewModel.prototype.push = function(value, ctx, error) {
-    var obj = new AtumObject(atum_debugger.Debugger.create(compute.just(value), ctx, interpret.noop, interpret.noop), value, ctx);
-    obj.getChildren({'key':'', 'value': ko.observable(obj) });
+   // var obj = new AtumObject(atum_debugger.Debugger.create(compute.just(value), ctx, interpret.noop, interpret.noop), value, ctx);
+    //obj.getChildren({'key':'', 'value': ko.observable(obj) });
     this.output.push({
-        'value': obj,
+        'value': value,
         'error': !!error
     });
     return this;
@@ -212,12 +210,15 @@ $(function(){
     $('button#eval-button')
         .button()
         .click(function(e){
-            run(doc.getValue(), out.write, errorOut.write);
-                $('.object-browser')
-                    .accordion({
-                        'collapsible': true,
-                        'animate': 100
-                    });
+           // run(doc.getValue(), out.write, errorOut.write);
+            step.finish(debug.beginInput(doc.getValue(),
+                    out.write,
+                    errorOut.write));
+            $('.object-browser')
+                .accordion({
+                    'collapsible': true,
+                    'animate': 100
+                });
         });
     
     $('.object-browser')
@@ -229,11 +230,11 @@ $(function(){
             var input = doc.getValue();
             
             try {
-                var ast = parser.parse(input);
-                var p = semantics.programBody(semantics.sourceElements(ast.body));
+                //var ast = parser.parse(input);
+                //var p = semantics.programBody(semantics.sourceElements(ast.body));
                 
-                var ctx = globalCtx;
-                model.debug(beginInput(input,
+                //var ctx = globalCtx;
+                model.debug(debug.beginInput(input,
                     out.write,
                     errorOut.write));
                 
@@ -244,6 +245,7 @@ $(function(){
                 stepOutButton.attr("disabled", false);
 
             } catch (e) {
+                throw e;
                 $('.ParseError').text(e);
             }
         });
