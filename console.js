@@ -199,14 +199,6 @@ ConsoleViewModel.prototype.stop = function() {
 var model = new ConsoleViewModel();
 ko.applyBindings(model);
 
-var globalCtx = interpret.complete(
-    compute.sequence(
-        global.enterGlobal(),
-        global.initialize(),
-        compute.computeContext),
-    context.ComputeContext.empty,
-    function(x) { return x },
-    function(x) { return x });
 
 $(function(){
     var stopButton = $('button#stop-button'),
