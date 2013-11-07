@@ -3,25 +3,27 @@
 require(['knockout-2.2.1',
         'parse/parse',
         'nu/stream',
-        'atum/interpret',
-        'atum/compute',
-        'atum/compute/context',
-        'atum/builtin/impl/global',
-        'atum/semantics/semantics',
-        'atum/debug/debugger',
         'ecma/lex/lexer',
-        'ecma/parse/parser'],
+        'ecma/parse/parser',
+        'sheut/run',
+        'sheut/operations/context',
+        'sheut/operations/reference',
+        'sheut/operations/evaluation',
+        'sheut/debug',
+        'sheut/state',
+        'sheut/step',],
 function(ko,
         parse,
         stream,
-        interpret,
-        compute,
-        context,
-        global,
-        semantics,
-        atum_debugger,
         lexer,
-        parser) {
+        parser,
+        run,
+        context,
+        reference,
+        evaluation,
+        debug,
+        state,
+        step) {
 
 var reduce = Function.prototype.call.bind(Array.prototype.reduce);
 
@@ -33,7 +35,7 @@ var get = function(p, c) {
  ******************************************************************************/
 var printBindings = function(d, record) {
     if (record.ref) {
-        var obj = d.getValue(record, function(x, ctx) { return x; }, function(x, ctx) { return x; });
+        var obj = run.extract(record, reference.getValue, null);
         record = obj.properties;
     }
     return Object.keys(record).reduce(function(p, c) {
@@ -52,10 +54,10 @@ var printFrame = function(d, lex) {
 var printEnvironments = function(d, ctx) {
     var environments = [];
     if (ctx.userData) {
-        var environment = d.getValue(ctx.userData.lexicalEnvironment, function(x, ctx) { return x; }, function(x, ctx) { return x; });
+        var environment = run.extract(ctx, context.environment, null);
         do {
             environments.push(printFrame(d, environment));
-            environment = d.getValue(environment.outer, function(x, ctx) { return x; }, function(x, ctx) { return x; });
+            environment = run.extract(ctx, context.environment.outer, null);
         } while (environment);
     };
     return environments;
@@ -75,33 +77,6 @@ var errorOut = {
         model.push(x, ctx, true);
     }
 };
-
-var run = function (input, ok, err) {
-    try {
-        var ast = parser.parse(input);
-    } catch(e) {
-        return err(e, null)();
-    }
-    return interpret.complete(
-        semantics.programBody(semantics.sourceElements(ast.body)),
-        globalCtx,
-        ok,
-        err);
-};
-
-var runContext = function(input, ctx, ok, err) {
-    try {
-        var ast = parser.parse(input);
-        return interpret.complete(
-            semantics.programBody(semantics.sourceElements(ast.body)),
-            ctx,
-            ok,
-            err);
-    } catch (e) {
-        return err(e, null);
-    }
-};
-
 
 /* Code Mirror
  ******************************************************************************/
@@ -176,29 +151,33 @@ var ConsoleViewModel = function() {
     
     this.stack = ko.computed(function(){
         return (self.debug() && self.debug().ctx.userData ? 
-            self.debug().ctx.userData.metadata.stack :
+            ko.utils.arrayMap(self.debug().ctx.userData.metadata.stack, function(x) {
+                return {
+                    'name': (x.func ? self.debug().run(object.get(x.func, 'name'), function(x){ return x.value; }) : '')
+                };
+            }) :
             [])
     });
 };
 
 ConsoleViewModel.prototype.finish = function() {
-    return this.debug(this.debug().finish());
+    return this.debug = step.finish(this.debug);
 };
 
 ConsoleViewModel.prototype.run = function() {
-    return this.debug(this.debug().stepToDebugger());
+    return this.debug = step.run(this.debug);
 };
 
 ConsoleViewModel.prototype.stepOver = function() {
-    return this.debug(this.debug().stepOver());
+    return this.debug = step.stepOver(this.debug);
 };
 
 ConsoleViewModel.prototype.stepInto = function() {
-    return this.debug(this.debug().step());
+    return this.debug = step.step(this.debug);
 };
 
 ConsoleViewModel.prototype.stepOut = function() {
-    return this.debug(this.debug().stepOut());
+    return this.debug = step.stepOut(this .debug);
 };
 
 ConsoleViewModel.prototype.push = function(value, ctx, error) {
@@ -262,7 +241,7 @@ $(function(){
                 var p = semantics.programBody(semantics.sourceElements(ast.body));
                 
                 var ctx = globalCtx;
-                model.debug(atum_debugger.Debugger.create(p, ctx,
+                model.debug(beginInput(input,
                     out.write,
                     errorOut.write));
                 
