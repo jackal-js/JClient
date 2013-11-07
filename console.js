@@ -211,7 +211,7 @@ var globalCtx = interpret.complete(
 $(function(){
     var stopButton = $('button#stop-button'),
         runButton = $('button#run-button'),
-        stepOverButton = $('button#step-button'),
+        stepOverButton = $('button#step-over-button'),
         stepOutButton = $('button#step-out-button'),
         stepIntoButton = $('button#step-into-button');
     
@@ -247,7 +247,7 @@ $(function(){
                 
                 stopButton.attr("disabled", false);
                 runButton.attr("disabled", false);
-                stepButton.attr("disabled", false);
+                stepOverButton.attr("disabled", false);
                 stepIntoButton.attr("disabled", false);
                 stepOutButton.attr("disabled", false);
 
