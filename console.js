@@ -39,7 +39,7 @@ var printBindings = function(d, record) {
         record = obj.properties;
     }
     return Object.keys(record).reduce(function(p, c) {
-        p.push({'name': c, 'value': record[c] });
+        p.push({'name': c, 'value': run.extract(record[c], reference.getValue, null)});
         return p;
     }, []);
 };
@@ -177,7 +177,7 @@ ConsoleViewModel.prototype.stepInto = function() {
 };
 
 ConsoleViewModel.prototype.stepOut = function() {
-    return this.debug = step.stepOut(this .debug);
+    return this.debug = step.stepOut(this.debug);
 };
 
 ConsoleViewModel.prototype.push = function(value, ctx, error) {
@@ -211,7 +211,7 @@ var globalCtx = interpret.complete(
 $(function(){
     var stopButton = $('button#stop-button'),
         runButton = $('button#run-button'),
-        stepButton = $('button#step-button'),
+        stepOverButton = $('button#step-button'),
         stepOutButton = $('button#step-out-button'),
         stepIntoButton = $('button#step-into-button');
     
@@ -274,7 +274,7 @@ $(function(){
             }
         });
     
-    stepButton
+    stepOverButton
         .button()
         .attr("disabled", true)
         .click(function(e){
