@@ -110,6 +110,7 @@ jackalApp.controller(
                         $scope.myPrivateSessions = [];
 			$scope.myPublicSessions = [];
 			$scope.allPublicSessions = [];
+                        window.location.href = url.split('/')[0].concat('index.html');
 		}
                 
 

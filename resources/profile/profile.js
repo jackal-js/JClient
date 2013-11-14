@@ -13,11 +13,7 @@ $(document).ready(function(){
     function showModal(modal){
         $(modal).modal(options);
     }
-    
-//   document.getElementById("myCodeSession").style.visibility ="hidden";
-//   document.getElementById("sharedCodeSession").style.visibility ="visibility";
-//   document.getElementById("settingSession").style.visibility ="hidden";
-//   document.getElementById("helpSession").style.visibility ="hidden";
+
 });
 
 $('#myCode').click(function(){
@@ -41,7 +37,3 @@ $('#help').click(function(){
    helpDiv.show();
    $('.tools').after(helpDiv);
 });
-
-//$('#abb').click(function(){
-//   shareCodeDiv.show();
-//});

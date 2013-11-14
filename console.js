@@ -206,10 +206,37 @@ $(function(){
         stepIntoButton = $('button#step-into-button');
     
     $('#container').layout();
-
+    
+    $('#refresh-button').click(function(){
+       doc.setValue(codeMirrorText); 
+    });
+    
+    $('#save-button').click(function(){
+        $('#saveModal').modal('show');
+        document.getElementById('saveText').innerHTML = doc.getValue();
+        var title = document.getElementById('saveTitle').value;
+        if(title == ''){
+            document.getElementById('sessionFlag').innerHTML = 'New';
+        }else{
+            document.getElementById('sessionFlag').innerHTML = 'Save';
+        }
+    });
+    
+    $('#share-button')
+        .click(function(){
+            var url = window.location.href.split('?');
+            document.getElementById('shareLink').value = url[0].concat("?").concat(url[1]).concat("?").concat(url[2]);
+            $('#shareModal').modal('show');
+            
+        });
+    
+    
+                
+    
     $('button#eval-button')
         .button()
         .click(function(e){
+            document.getElementById('output-console').innerHTML="";
            // run(doc.getValue(), out.write, errorOut.write);
             step.finish(debug.beginInput(doc.getValue(),
                     out.write,
@@ -261,6 +288,7 @@ $(function(){
         .button()
         .attr("disabled", true)
         .click(function(e) {
+            document.getElementById('output-console').innerHTML="";
             if (model.debug()) {
                 model.run();
             } else {
