@@ -26,27 +26,10 @@ jackalApp.controller(
                 
                 if( section == "console.html" && sessionId != undefined){
                     if(userId != undefined){
-                    
-                    userPrivateSessionsRef = ref.child('sessions').child(userId).child('private').child(sessionId);
-                    userPrivateSessionsRef.child('code').once('value', function(snapshot) {
-                        
-                        if (snapshot.val() != null){
-                            session.code = snapshot.val();
-                            codeMirrorText = snapshot.val();
-                            session.public = false;
-                            userPrivateSessionsRef.child('title').once('value', function(snapshot) {
-                                session.title = snapshot.val(); 
-                                $scope.setActive(sessionId, session, false);
-                            })
-                            userPrivateSessionsRef.child('created').once('value', function(snapshot) {
-                                session.created = snapshot.val();
-                                $scope.setActive(sessionId, session, false);
-                            });
-                        } else {
-                            userPublicSessionsRef = ref.child('sessions').child(userId).child('public').child(sessionId);
-                            userPublicSessionsRef.child('code').once('value', function(snapshot){
-                                if (snapshot.val() != null){
-                                    session.code = snapshot.val();
+                        userPublicSessionsRef = ref.child('sessions').child(userId).child('public').child(sessionId);
+                        userPublicSessionsRef.child('code').once('value', function(snapshot){
+                            if (snapshot.val() != null){
+                                session.code = snapshot.val();
                                     codeMirrorText = snapshot.val();
                                     session.public = true;
                                     userPublicSessionsRef.child('title').once('value', function(snapshot) {
@@ -57,10 +40,25 @@ jackalApp.controller(
                                         session.created = snapshot.val();
                                         $scope.setActive(sessionId, session, true);
                                     });
-                                } 
-                            });
-                        }
-                    });
+                            } else {
+                                userPrivateSessionsRef = ref.child('sessions').child(userId).child('private').child(sessionId);
+                                userPrivateSessionsRef.child('code').once('value', function(snapshot) {
+                                     if (snapshot.val() != null){
+                                        session.code = snapshot.val();
+                                        codeMirrorText = snapshot.val();
+                                        session.public = false;
+                                        userPrivateSessionsRef.child('title').once('value', function(snapshot) {
+                                            session.title = snapshot.val(); 
+                                            $scope.setActive(sessionId, session, false);
+                                        });
+                                        userPrivateSessionsRef.child('created').once('value', function(snapshot) {
+                                            session.created = snapshot.val();
+                                            $scope.setActive(sessionId, session, false);
+                                        });
+                                     }
+                                });
+                            }
+                        });
                     } else {
                         
                         // This is not working yet
@@ -147,10 +145,10 @@ jackalApp.controller(
                                 if( section == "console.html" && userId != user.uid && sessionId != undefined){
                                     $('#save-button').attr("disabled", true);
                                     $('#share-button').attr("disabled", true);
-                                    if($scope.active.public == false){
-                                        alert("Permission denied: private code access.");
-                                        window.location.href = url.split('?')[0].split('console.html')[0];
-                                    }
+//                                    if($scope.active.public == false){
+//                                        alert("Permission denied: private code access.");
+//                                        window.location.href = url.split('?')[0].split('console.html')[0];
+//                                    }
                                 }   
                         
 			userRef = usersRef.child(user.uid);
