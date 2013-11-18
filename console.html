@@ -67,7 +67,7 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <!-- TODO: temporary  -->
-                        <li><a href="profile.html">Welcome, {{user.name}}!</a></li>
+                        <li><a href="profile.html">Welcome, {{user.name}}(Github: {{user.id}})!</a></li>
                     </ul>
                 </div>
             </div>
@@ -78,10 +78,10 @@
                 <div class='workspace cf'>
                     <div class="btn-controls cf">
                     <div class="btn-group">
-                        <button id="save-button" type="button" class="btn btn-default btn-sm" ng-disabled="!user" data-toggle="tooltip" title="Save">
+                        <button id="save-button" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Save">
                             <span class="glyphicon glyphicon-floppy-disk"></span>
                         </button>
-                        <button id="fork-button" type="button" data-toggle="tooltip" title="Fork" ng-click="test()" class="btn btn-default btn-sm">
+                        <button id="fork-button" type="button" data-toggle="tooltip" title="Fork" class="btn btn-default btn-sm">
                             <span class="glyphicon glyphicon-random"></span>
                         </button>
                         <button id="share-button" type="button" ng-disabled="active.public || !user || !active.title" class="btn btn-default btn-sm" data-toggle="tooltip" title="Share">
@@ -129,7 +129,9 @@
                     <div class='controls'></div>
                 </div>
                 <div class='output code'>
-                    <ul id='output-console' data-bind="template: { name: 'output-template', foreach: output }"></ul>
+                    <ul id='output-console' data-bind="template: { name: 'output-template', foreach: output }">
+                        <li class="ParseError"></li>
+                    </ul>
                     <div class='output-interactive cf'>
                         <div id='output-interactive-textarea'></div>
                     </div>
@@ -215,9 +217,9 @@
 
                     'atum': '/dependencies/atum/lib',
                     'amulet': '/dependencies/amulet/lib',
-                    'parse': '/dependencies/parse/lib',
+                    'parse': '/dependencies/parse/dist',
                     'seshat': '/dependencies/seshat/lib/seshat',
-                    'nu': '/dependencies/nu/lib',
+                    'nu': '/dependencies/nu/dist',
                     'ecma': '/dependencies/parse-ecma/lib',
                     'ecma_ast': '/dependencies/ecma-ast/lib',
                     'sheut': '/dependencies/sheut/lib',

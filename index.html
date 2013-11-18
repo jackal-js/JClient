@@ -6,35 +6,10 @@
         
         <link type="text/css" rel="stylesheet" href="/resources/bootstrap/css/bootstrap.css" />
         <link type="text/css" rel="stylesheet" href="/resources/bootstrap/css/bootstrap.min.css" />
+        <link type="text/css" rel="stylesheet" href="/resources/index.css" />
         
         <style>
             @import url(https://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700);
-            html, body {
-                height: 100%;
-                margin: 0;
-                padding: 0;
-            }
-        
-            body {
-                font:14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
-            }
-            
-            .ui-nav {
-                text-shadow: 0 -1px 0 rgba(0,0,0,.15);
-                background-color: #563d7c;
-                border-color: #463265;
-                box-shadow: 0 1px 0 rgba(255,255,255,.1);
-            }
-
-            .ui-nav .navbar-brand {
-                color: ghostwhite;
-                font-size: 2.0em;
-            }
-
-            .ui-nav .navbar-nav > li > a {
-                color: #cdbfe3;
-                font-size: 1.3em;
-            }
         </style>
     </head>
     <body ng-controller="DatabaseCtrl">
@@ -51,10 +26,69 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li ng-hide="user"><a ng-click="login()">Login with Github</a></li>
-                        <li ng-show="user"><a href="profile.html">Welcome, {{user.name}}!</a></li>
+                        <li ng-show="user"><a href="profile.html">Welcome, {{user.name}}(Github: {{user.id}})!</a></li>
                         <li ng-show="user"><a ng-click="logout()" style="font-size: 1em;">Log out</a></li>
-                        
                     </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="row">
+                <div class="well col-md-3 side-bar">
+                    <ul class="side-bar-items">
+                        <li>
+                            <div class="ui-about-section">
+                                <a href="javascript:void(0)" id="myCode">About </a>
+                                <p>Application Description</p>
+                            </div>
+                        </li>
+                        <li><a href="javascript:void(0)" id="help">Help <span class="glyphicon glyphicon-chevron-right"></span></a></li>
+                        <li><a href="javascript:void(0)" id="contact">Contact <span class="glyphicon glyphicon-chevron-right"></span></a></li>        
+                    </ul>
+                </div>
+            
+                <div class="col-md-9 main-section">
+                    <div class="section-header">
+                        <h3>Public Code</h3>
+                    </div>
+                    <form role="form" class="search-bar col-md-4">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search ...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button">Search</button>
+                                </span>
+                            </div>
+                   </form>
+                   <table class="table table-hover">
+                       <thead>
+                           <tr>
+                               <th>Session Title</th>
+                               <th>Owner</th>
+                               <th>Owner Id</th>
+                               <th>Created</th>
+                               <th>Last Modified</th>
+                               
+                           </tr>
+                       </thead>
+                       <tbody ng-repeat="userObj in allPublicSessions" ng-show="userObj.sessions.length > 0">
+                           <tr ng-repeat="session in userObj.sessions" >
+                               <td><a href="console.html?{{session.$id}}?{{userObj.uid}}">{{session.title}}</a></td>
+                               <td>{{userObj.name}} </td>
+                               <td>{{userObj.uid}}</td>
+                               <td>{{session.created | date:'short'}}</td>
+                               <td>{{session.lastChanged | date:'short'}}</td>
+                               <td><div class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="caret"></b></a>
+                                   <ul class="dropdown-menu pull-right">
+                                       <li role="presentation" class="dropdown-header">Link</li>
+                                       <li><p>http://localhost:8086/console.html?{{session.$id}}{{userObj.uid}}</p></li>
+                                   </ul>
+                                   </div>
+                               </td>
+                           </tr>
+                       </tbody>
+                   </table>
+                   <p ng-show="allPublicSessions.length == 0">No record in Database</p>
                 </div>
             </div>
         </div>

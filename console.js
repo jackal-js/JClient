@@ -83,6 +83,8 @@ var doc = CodeMirror(document.getElementById('input'), {
     'lineNumbers': true
 }).doc;
 
+console.log("load codemirror");
+
 var interactive = CodeMirror(document.getElementById('output-interactive-textarea'), {
     'mode': 'javascript',
     'lineNumbers': false,
@@ -192,11 +194,22 @@ ConsoleViewModel.prototype.stop = function() {
     return this.debug(null);
 };
 
+
+
 /* 
  ******************************************************************************/
 var model = new ConsoleViewModel();
 ko.applyBindings(model);
 
+//model.location.subscribe(\current -> {
+//    if (current && current.start)
+//        cm.removeLineClass(current.start.line - 1, 'background', 'active-line');
+//}, null, 'beforeChange');
+// 
+//model.location.subscribe(\x -> {
+//    if (x)
+//       cm.addLineClass(x.start.line - 1, 'background', 'active-line');
+//});
 
 $(function(){
     var stopButton = $('button#stop-button'),
@@ -213,30 +226,32 @@ $(function(){
     
     $('#save-button').click(function(){
         $('#saveModal').modal('show');
-        document.getElementById('saveText').innerHTML = doc.getValue();
-        var title = document.getElementById('saveTitle').value;
-        if(title == ''){
-            document.getElementById('sessionFlag').innerHTML = 'New';
+        $('#saveText').text(doc.getValue());
+        if($('#saveTitle').val() == ''){
+            $('#sessionFlag').text('New');
         }else{
-            document.getElementById('sessionFlag').innerHTML = 'Save';
+            $('#sessionFlag').text('Save');
         }
+    });
+    
+    $('#fork-button').click(function(){
+       $('#saveModal').modal('show');
+       $('#saveText').text(doc.getValue()).attr("disabled", true);
+       $('#saveTitle').attr("disabled", true);
+       $('#sessionFlag').text('Fork');
     });
     
     $('#share-button')
         .click(function(){
             var url = window.location.href.split('?');
-            document.getElementById('shareLink').value = url[0].concat("?").concat(url[1]).concat("?").concat(url[2]);
+            $('#shareLink').val(url[0].concat("?").concat(url[1]).concat("?").concat(url[2]));
             $('#shareModal').modal('show');
-            
         });
-    
-    
-                
     
     $('button#eval-button')
         .button()
         .click(function(e){
-            document.getElementById('output-console').innerHTML="";
+            $('#output-console').text("");
            // run(doc.getValue(), out.write, errorOut.write);
             step.finish(debug.beginInput(doc.getValue(),
                     out.write,
@@ -264,16 +279,17 @@ $(function(){
                 model.debug(debug.beginInput(input,
                     out.write,
                     errorOut.write));
-                
+                    
                 stopButton.attr("disabled", false);
                 runButton.attr("disabled", false);
                 stepOverButton.attr("disabled", false);
                 stepIntoButton.attr("disabled", false);
                 stepOutButton.attr("disabled", false);
 
+                $('.ParseError').text('');
             } catch (e) {
-                throw e;
                 $('.ParseError').text(e);
+                throw e;
             }
         });
     
@@ -288,7 +304,7 @@ $(function(){
         .button()
         .attr("disabled", true)
         .click(function(e) {
-            document.getElementById('output-console').innerHTML="";
+            $('#output-console').text("");
             if (model.debug()) {
                 model.run();
             } else {

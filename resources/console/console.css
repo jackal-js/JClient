@@ -318,3 +318,12 @@ button {
     clear: both;
 }
 
+.active-line {
+    background-color: red;
+}
+
+.ParseError {
+    color: red;
+    font-weight: bold;
+    font-style: italic;
+}
