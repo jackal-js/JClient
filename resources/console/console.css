@@ -319,7 +319,7 @@ button {
 }
 
 .active-line {
-    background-color: red;
+    background-color: greenyellow;
 }
 
 .ParseError {

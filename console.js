@@ -78,10 +78,14 @@ var errorOut = {
 
 /* Code Mirror
  ******************************************************************************/
-var doc = CodeMirror(document.getElementById('input'), {
+
+
+var codeMirror = CodeMirror(document.getElementById('input'), {
     'mode': 'javascript',
     'lineNumbers': true
-}).doc;
+});
+
+var doc = codeMirror.doc;
 
 console.log("load codemirror");
 
@@ -149,6 +153,10 @@ var ConsoleViewModel = function() {
             []);
     });
     
+    this.location = ko.computed((function() {
+        return (self.debug() ? run.extract(self.debug(), context.location, null) : []);
+    }));
+    
     this.stack = [];/*ko.computed(function(){
         return (self.debug() && self.debug().ctx.userData ? 
             ko.utils.arrayMap(self.debug().ctx.userData.metadata.stack, function(x) {
@@ -201,15 +209,13 @@ ConsoleViewModel.prototype.stop = function() {
 var model = new ConsoleViewModel();
 ko.applyBindings(model);
 
-//model.location.subscribe(\current -> {
-//    if (current && current.start)
-//        cm.removeLineClass(current.start.line - 1, 'background', 'active-line');
-//}, null, 'beforeChange');
-// 
-//model.location.subscribe(\x -> {
-//    if (x)
-//       cm.addLineClass(x.start.line - 1, 'background', 'active-line');
-//});
+model.location.subscribe((function(current){
+    if((current && current.start)) codeMirror.removeLineClass((current.start.line - 1), "background", "active-line");
+}), null, "beforeChange");
+
+model.location.subscribe((function(x) {
+    if((x && x.start)) codeMirror.addLineClass((x.start.line - 1), "background", "active-line");
+}));
 
 $(function(){
     var stopButton = $('button#stop-button'),
