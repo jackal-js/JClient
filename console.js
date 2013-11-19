@@ -278,6 +278,7 @@ $(function(){
             var input = doc.getValue();
             
             try {
+                
                 //var ast = parser.parse(input);
                 //var p = semantics.programBody(semantics.sourceElements(ast.body));
                 
@@ -291,8 +292,8 @@ $(function(){
                 stepOverButton.attr("disabled", false);
                 stepIntoButton.attr("disabled", false);
                 stepOutButton.attr("disabled", false);
-
-                $('.ParseError').text('');
+                $('.output-value').text("");
+                $('.ParseError').text("");
             } catch (e) {
                 $('.ParseError').text(e);
                 throw e;
@@ -310,7 +311,8 @@ $(function(){
         .button()
         .attr("disabled", true)
         .click(function(e) {
-            $('#output-console').text("");
+            $('.output-value').text("");
+            $('.ParseError').text("");
             if (model.debug()) {
                 model.run();
             } else {
