@@ -20,8 +20,8 @@
         <script type="text/html" id="environments-template">
             <li>
                 <ul class='binding-list' data-bind="foreach: bindings">
-                    <li class='binding code'>
-                        <span class='binding-name' data-bind="text: name"></span>:<span class='binding-value' data-bind="text: value"></span>
+                <li class='binding code'>
+                    <div data-bind="template: { name: 'object-child-template', data: value, afterRender: value.value().afterRender }"></div>
                     </li>
                 </ul>
             </li>
@@ -29,26 +29,38 @@
     
         <script type="text/html" id="stack-frame-template">
             <li class='stack-frame'>
-                <span class='stack-frame-name' data-bind="text: name"></span>
+                <a class='stack-frame-name' data-bind="text: name, click: $parent.selectFrame"></a>
             </li>
         </script>
     
-        <script type="text/html" id="object-template">
-            <div class='object-browser'>
-                <span class='object-value' data-bind="text: value"></span>
-                <ul class='object-children' data-bind="foreach: children">
-                    <li>
-                        <a class='child-key' data-bind="text: key, click: $parent.getChildren"></a>
-                        <div data-bind="template: { name: 'object-template', data: value}"></div>
-                    </li>
-                </ul>
+        <script type="text/html" id="object-child-template">
+            <div class='object-browser' data-bind="css: 'type-' + value().type()" >
+                <h3 class='object-value' data-bind="click: value().getChildren.bind(value()), css: { 'ui-state-disabled': !value().isObject() }">
+                    <span class='child-key-label' data-bind='text: key'></span>
+                    <span class='value-label' data-bind='text: value().displayValue'></span>
+                </h3>
+                <div data-bind="foreach: { data: value().children, afterRender: value().afterRender }">
+                    <div class='child-value' data-bind="template: { name: 'object-child-template', data: $data }"></div>
+                </div>
             </div>
+        </script>
+    
+        <script type="text/html" id="object-template">
+            <div class='object-browser' data-bind="css: 'type-' + type()" >
+            <h3 class='object-value value-label' data-bind="text: displayValue, click: getChildren, css: { 'ui-state-disabled': !isObject() }"></h3>
+            <div data-bind="foreach: { data: children }">
+                <div class='child-value' data-bind="template: { name: 'object-child-template', data: $data}"></div>
+            </div>
+        </div>
         </script>
     
         <script type="text/html" id="output-template">
             <li class='output-value' data-bind="css: { 'output-error': error }">
-                <div data-bind="text: value"></div>
-                <!-- <div data-bind="template: { name: 'object-template', data: value }"></div> -->
+                <div data-bind="template: { name: 'object-template', data: value, afterRender: value.afterRender }"></div>
+            </li>
+            <li class='output-value input-value'>
+                <span class='ui-icon ui-icon-carat-1-e'></span>
+                <span data-bind="text: input"></div>
             </li>
         </script>
     
