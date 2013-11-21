@@ -99,7 +99,7 @@ var id = (function(x) {
         $("#output > ul").on("accordionactivate", ".object-browser", (function(event, ui) {
             return $("#output > ul").scrollTop($(this).offset().top);
         }));
-        $("button#eval-button").button().click((function(e) {
+        $("button#run-button").button().click((function(e) {
             var input = doc.getValue();
             model.debug(debug.beginInput(input, out.write, errorOut.write));
             model.finish();
@@ -118,7 +118,7 @@ var id = (function(x) {
         })).click((function(e) {
             model.run();
         }));
-        stepButton.button(({
+        stepOverButton.button(({
             "disabled": true
         })).click((function(e) {
             model.stepOver();
