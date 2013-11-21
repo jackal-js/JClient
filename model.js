@@ -2,7 +2,7 @@
  * THIS FILE IS AUTO GENERATED from 'lib/model.kep'
  * DO NOT EDIT
 */
-define(["require", "exports", "knockout-2.2.1", "amulet/record", "atum/compute", "atum/operations/object", "sheut/debug", "sheut/run", "sheut/step", "sheut/operations/context", "sheut/operations/reference", "atum_debug_console/object_explorer"], (function(require, exports, ko, record, compute, object, debug, run, step, context, reference, object_explorer) {
+define(["require", "exports", "knockout-2.2.1", "amulet/record", "atum/compute", "atum/operations/object", "sheut/debug", "sheut/run", "sheut/step", "sheut/operations/context", "sheut/operations/reference", "object_explorer"], (function(require, exports, ko, record, compute, object, debug, run, step, context, reference, object_explorer) {
     "use strict";
     var Result, Input, ConsoleViewModel;
     var ko = ko,
@@ -114,4 +114,4 @@ define(["require", "exports", "knockout-2.2.1", "amulet/record", "atum/compute",
     (exports.Result = Result);
     (exports.Input = Input);
     (exports.ConsoleViewModel = ConsoleViewModel);
-}))
+}));

@@ -68,4 +68,4 @@ define(["require", "exports", "knockout-2.2.1", "atum/compute", "sheut/debug", "
     (exports.updateAccordions = updateAccordions);
     (exports.create = create);
     (exports.createForKey = createForKey);
-}))
+}));

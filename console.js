@@ -1,17 +1,21 @@
-/*
- * THIS FILE IS AUTO GENERATED from 'lib/console.kep'
- * DO NOT EDIT
-*/
-define(["require", "exports", "knockout-2.2.1", "sheut/debug", "sheut/step", "sheut/run", "sheut/operations/evaluation", "atum_debug_console/model", "atum_debug_console/object_explorer"], (function(require, exports, ko, debug, step, run, evaluate, atum_debug_model, object_explorer) {
-    "use strict";;
-    var ko = ko,
-        debug = debug,
-        step = step,
-        run = run,
-        evaluate = evaluate,
-        atum_debug_model = atum_debug_model,
-        object_explorer = object_explorer;;;;
-    var id = (function(x) {
+/**
+ */
+require(["knockout-2.2.1", 
+         "sheut/debug", 
+         "sheut/step", 
+         "sheut/run", 
+         "sheut/operations/evaluation", 
+         "model", 
+         "object_explorer"],
+function(ko, 
+         debug, 
+         step, 
+         run, 
+         evaluate, 
+         atum_debug_model, 
+         object_explorer) {
+
+var id = (function(x) {
         return x;
     });
     var model;
@@ -130,4 +134,4 @@ define(["require", "exports", "knockout-2.2.1", "sheut/debug", "sheut/step", "sh
             model.stepOut();
         }));
     }));
-}))
+});
