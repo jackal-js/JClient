@@ -321,9 +321,3 @@ button {
 .active-line {
     background-color: greenyellow;
 }
-
-.ParseError {
-    color: red;
-    font-weight: bold;
-    font-style: italic;
-}

@@ -34,11 +34,18 @@ jackalApp.controller(
                                     session.public = true;
                                     userPublicSessionsRef.child('title').once('value', function(snapshot) {
                                         session.title = snapshot.val();
-                                        $scope.setActive(sessionId, session, true);
+                                        //$scope.setActive(sessionId, session, true);
                                     });
                                     userPublicSessionsRef.child('created').once('value', function(snapshot) {
                                         session.created = snapshot.val();
-                                        $scope.setActive(sessionId, session, true);
+                                        //$scope.setActive(sessionId, session, true);
+                                    });
+                                    userPublicSessionsRef.child('forkedFrom').once('value', function(snapshot) {
+                                        if (snapshot.val() != null){
+                                            $scope.setActive(sessionId, session, true, snapshot.val().split('|')[0]);
+                                        } else {
+                                            $scope.setActive(sessionId, session, true, userId);
+                                        }
                                     });
                             } else {
                                 userPrivateSessionsRef = ref.child('sessions').child(userId).child('private').child(sessionId);
@@ -49,11 +56,11 @@ jackalApp.controller(
                                         session.public = false;
                                         userPrivateSessionsRef.child('title').once('value', function(snapshot) {
                                             session.title = snapshot.val(); 
-                                            $scope.setActive(sessionId, session, false);
+                                            $scope.setActive(sessionId, session, false, undefined);
                                         });
                                         userPrivateSessionsRef.child('created').once('value', function(snapshot) {
                                             session.created = snapshot.val();
-                                            $scope.setActive(sessionId, session, false);
+                                            $scope.setActive(sessionId, session, false, undefined);
                                         });
                                      }
                                 });
@@ -91,8 +98,7 @@ jackalApp.controller(
 				if(snapshot.val()[user.uid] == null) {
 					console.log('creating user ' + user.uid);
 					usersRef.child(user.uid).set({
-						name: user.name,
-						online: true
+						username: user.username
 					});
 				} else {
 					console.log('logging in as ' + user.uid);
@@ -153,10 +159,11 @@ jackalApp.controller(
 			});
 		}
 
-		$scope.setActive = function(id, session, public) {
+		$scope.setActive = function(id, session, public, owner) {
 			$scope.activeID = id;
 			$scope.active = session;
 			$scope.active.public = public;
+                        $scope.active.owner = owner;
 		}
                 
                 $scope.saveOrAddSession = function() {
@@ -176,6 +183,19 @@ jackalApp.controller(
                         $('#saveModal').modal('hide');
                     }
                 }
+                
+                $scope.forkSession = function() {
+			var sessionRef = ref.child('sessions/' + $scope.user.uid + '/' + ($scope.active.public ? 'public' : 'private')).push();
+
+			sessionRef.set({
+				title: $scope.active.title,
+				code: $scope.active.code,
+				created: Firebase.ServerValue.TIMESTAMP,
+				lastChanged: Firebase.ServerValue.TIMESTAMP,
+				forkedFrom: $scope.active.owner + '|' + $scope.activeID
+			});
+                        alert("Fork successfully!");
+		}
               
                 $scope.shareSession = function(){
                     $scope.active.public = true;

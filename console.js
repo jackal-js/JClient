@@ -87,6 +87,34 @@ var id = (function(x) {
             stepIntoButton = $("button#step-into-button"),
             stepOverButton = $("button#step-over-button");
         $("#container").layout();
+        
+        /***
+         *   Client functions
+         */
+        $('#refresh-button').click(function(){
+            doc.setValue(codeMirrorText); 
+        });
+    
+        $('#save-button').click(function(){
+            $('#saveModal').modal('show');
+            $('#saveText').text(doc.getValue());
+            if($('#saveTitle').val() == ''){
+                $('#sessionFlag').text('New');
+            }else{
+                $('#sessionFlag').text('Save');
+            }
+        });
+        
+        $('#share-button')
+        .click(function(){
+            var url = window.location.href.split('?');
+            $('#shareLink').val(url[0].concat("?").concat(url[1]).concat("?").concat(url[2]));
+            $('#shareModal').modal('show');
+        });
+        /*
+         * ****************************************
+         */
+        
         model.debug.subscribe((function(x) {
             var disable = (!x || x.debug.complete);
             stopButton.button("option", "disabled", disable);

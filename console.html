@@ -79,7 +79,7 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <!-- TODO: temporary  -->
-                        <li><a href="profile.html">Welcome, {{user.name}}(Github: {{user.id}})!</a></li>
+                        <li><a href="profile.html">Welcome, {{user.username}}!</a></li>
                     </ul>
                 </div>
             </div>
@@ -141,9 +141,7 @@
                     <div class='controls'></div>
                 </div>
                 <div class='output code'>
-                    <ul id='output-console' data-bind="template: { name: 'output-template', foreach: output }">
-                        <li class='ParseError'></li>
-                    </ul>
+                    <ul id='output-console' data-bind="template: { name: 'output-template', foreach: output }"></ul>
                     <div class='output-interactive cf'>
                         <div id='output-interactive-textarea'></div>
                     </div>

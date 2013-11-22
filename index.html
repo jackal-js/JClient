@@ -26,7 +26,7 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li ng-hide="user"><a ng-click="login()">Login with Github</a></li>
-                        <li ng-show="user"><a href="profile.html">Welcome, {{user.name}}(Github: {{user.id}})!</a></li>
+                        <li ng-show="user"><a href="profile.html">Welcome, {{user.username}}!</a></li>
                         <li ng-show="user"><a ng-click="logout()" style="font-size: 1em;">Log out</a></li>
                     </ul>
                 </div>
