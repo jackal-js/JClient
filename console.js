@@ -82,7 +82,7 @@ var id = (function(x) {
     $((function() {
         var stopButton = $("button#stop-button"),
             runButton = $("button#run-button"),
-            stepButton = $("button#step-button"),
+            stepBackButton = $("button#step-back-button"),
             stepOutButton = $("button#step-out-button"),
             stepIntoButton = $("button#step-into-button"),
             stepOverButton = $("button#step-over-button");
@@ -119,7 +119,7 @@ var id = (function(x) {
             var disable = (!x || x.debug.complete);
             stopButton.button("option", "disabled", disable);
             runButton.button("option", "disabled", disable);
-            stepButton.button("option", "disabled", disable);
+            stepBackButton.button("option", "disabled", disable);
             stepOverButton.button("option", "disabled", disable);
             stepIntoButton.button("option", "disabled", disable);
             stepOutButton.button("option", "disabled", disable);
@@ -160,6 +160,11 @@ var id = (function(x) {
             "disabled": true
         })).click((function(e) {
             model.stepOut();
+        }));
+        stepBackButton.button(({
+            "disabled": true
+        })).click((function(e) {
+            model.stepBack();
         }));
     }));
 });

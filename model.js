@@ -72,8 +72,23 @@ define(["require", "exports", "knockout-2.2.1", "amulet/record", "atum/compute",
     });
     (ConsoleViewModel = (function() {
         var self = this;
+        
         (self.debug = ko.observable());
         (self.output = ko.observableArray());
+        var StateArray = new Array();
+        var arrayLength = 9;
+        var i = 0;
+        if(i < arrayLength && !StateArray[i]) {
+            StateArray[i] = self.debug;
+            i++;
+        } else if(i == arrayLength) {
+            if(!StateArray[i]) {
+                StateArray[i] = self.debug;
+            } else if(StateArray[i]) {
+                StateArray.shift();
+                StateArray[i] = self.debug;
+            }
+        }
         (self.location = ko.computed((function() {
             return (self.debug() ? run.extract(self.debug(), context.location, null) : []);
         })));
@@ -83,6 +98,7 @@ define(["require", "exports", "knockout-2.2.1", "amulet/record", "atum/compute",
         (self.stack = ko.computed((function() {
             return (self.debug() ? printStack(self.debug()) : []);
         })));
+        
     }));
     (ConsoleViewModel.prototype.finish = (function() {
         return this.debug(step.finish(this.debug()));
@@ -101,6 +117,11 @@ define(["require", "exports", "knockout-2.2.1", "amulet/record", "atum/compute",
     }));
     (ConsoleViewModel.prototype.stop = (function() {
         return this.debug(null);
+    }));
+    (ConsoleViewModel.prototype.stepBack = (function() {
+        var j = i;
+        i--;
+        return this.debug(StateArray[j]);
     }));
     (ConsoleViewModel.prototype.pushResult = (function(value, ctx, error) {
         return this.output.push(Result.create(object_explorer.create(value, ctx), error));
