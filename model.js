@@ -75,20 +75,7 @@ define(["require", "exports", "knockout-2.2.1", "amulet/record", "atum/compute",
         
         (self.debug = ko.observable());
         (self.output = ko.observableArray());
-        var StateArray = new Array();
-        var arrayLength = 9;
-        var i = 0;
-        if(i < arrayLength && !StateArray[i]) {
-            StateArray[i] = self.debug;
-            i++;
-        } else if(i == arrayLength) {
-            if(!StateArray[i]) {
-                StateArray[i] = self.debug;
-            } else if(StateArray[i]) {
-                StateArray.shift();
-                StateArray[i] = self.debug;
-            }
-        }
+        
         (self.location = ko.computed((function() {
             return (self.debug() ? run.extract(self.debug(), context.location, null) : []);
         })));
@@ -100,6 +87,11 @@ define(["require", "exports", "knockout-2.2.1", "amulet/record", "atum/compute",
         })));
         
     }));
+        var StateArray = new Array();
+        var arrayLength = 9;
+        var i = 0;
+        var j;
+        
     (ConsoleViewModel.prototype.finish = (function() {
         return this.debug(step.finish(this.debug()));
     }));
@@ -107,19 +99,52 @@ define(["require", "exports", "knockout-2.2.1", "amulet/record", "atum/compute",
         return this.debug(step.run(this.debug()));
     }));
     (ConsoleViewModel.prototype.stepOver = (function() {
+        if(i < arrayLength && !StateArray[i]) {
+            StateArray[i] = this.debug;
+            i++;
+        } else if(i == arrayLength) {
+            if(!StateArray[i]) {
+                StateArray[i] = this.debug;
+            } else if(StateArray[i]) {
+                StateArray.shift();
+                StateArray[i] = this.debug;
+            }
+        }
         return this.debug(step.stepOver(this.debug()));
     }));
     (ConsoleViewModel.prototype.stepInto = (function() {
+        if(i < arrayLength && !StateArray[i]) {
+            StateArray[i] = this.debug;
+            i++;
+        } else if(i == arrayLength) {
+            if(!StateArray[i]) {
+                StateArray[i] = this.debug;
+            } else if(StateArray[i]) {
+                StateArray.shift();
+                StateArray[i] = this.debug;
+            }
+        }
         return this.debug(step.step(this.debug()));
     }));
     (ConsoleViewModel.prototype.stepOut = (function() {
+        if(i < arrayLength && !StateArray[i]) {
+            StateArray[i] = this.debug;
+            i++;
+        } else if(i == arrayLength) {
+            if(!StateArray[i]) {
+                StateArray[i] = this.debug;
+            } else if(StateArray[i]) {
+                StateArray.shift();
+                StateArray[i] = this.debug;
+            }
+        }
         return this.debug(step.stepOut(this.debug()));
     }));
     (ConsoleViewModel.prototype.stop = (function() {
         return this.debug(null);
     }));
     (ConsoleViewModel.prototype.stepBack = (function() {
-        var j = i;
+        j = i;
         i--;
         return this.debug(StateArray[j]);
     }));
