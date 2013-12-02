@@ -40,7 +40,8 @@
                         <li>
                             <div class="ui-about-section">
                                 <a href="javascript:void(0)" id="myCode">About </a>
-                                <p>Application Description</p>
+                                <p>Jackal is a unique debugger that operates on a functional style interpreter. It will allow users to writw and execute JavaScript code in various browsers, and it will display the output within the same browser.</p>
+                                
                             </div>
                         </li>
                         <li><a href="javascript:void(0)" id="help">Help <span class="glyphicon glyphicon-chevron-right"></span></a></li>
@@ -52,14 +53,14 @@
                     <div class="section-header">
                         <h3>Public Code</h3>
                     </div>
-                    <form role="form" class="search-bar col-md-4">
+<!--                    <form role="form" class="search-bar col-md-4">
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="Search ...">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default" type="button">Search</button>
                                 </span>
                             </div>
-                   </form>
+                   </form>-->
                    <table class="table table-hover">
                        <thead>
                            <tr>
@@ -68,7 +69,7 @@
                                <th>Owner Id</th>
                                <th>Created</th>
                                <th>Last Modified</th>
-                               
+                               <th></th>
                            </tr>
                        </thead>
                        <tbody ng-repeat="userObj in allPublicSessions" ng-show="userObj.sessions.length > 0">

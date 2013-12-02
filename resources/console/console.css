@@ -321,3 +321,8 @@ button {
 .active-line {
     background-color: greenyellow;
 }
+
+.breakpoints {
+    width: 10px;
+}
+

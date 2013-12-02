@@ -57,7 +57,7 @@ define(["require", "exports", "knockout-2.2.1", "atum/compute", "sheut/debug", "
         }));
     }));
     (create = (function(value, ctx) {
-        var obj = new(AtumObject)(debug.debug(just(value), ctx, noop, noop), value);
+        var obj = new(AtumObject)(debug.debugInitial(just(value), ctx, noop, noop), value);
         obj.getChildren();
         return obj;
     }));

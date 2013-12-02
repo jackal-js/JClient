@@ -46,30 +46,40 @@
                 <div class="col-md-9 main-section">
                     <div class="tools">
                         <a href="console.html" class="btn btn-default" id="createSession"><span class="glyphicon glyphicon-file"></span> Create new session</a>
-                        <form role="form" class="search-bar col-md-4">
+<!--                        <form role="form" class="search-bar col-md-4">
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="Search your code">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default" type="button">Search</button>
                                 </span>
                             </div>
-                        </form>
+                        </form>-->
                     </div>
                     <div class="" id="myCodeSession">
                         <h2>My Code</h2>
                         <hr>
                         <div class="file-row row" ng-repeat="session in myPrivateSessions">
-                            <p class="col-md-3 title"><a href="console.html?{{session.$id}}?{{user.uid}}">{{session.title}}</a></p>
-                            <p class="col-md-4">Last edited {{session.lastChanged | date:'short'}}</p>
-                            <p class="col-md-4  fork-detail">Forked from someoneImportant022</p>
+                            <p class="col-md-2 title"><a href="console.html?{{session.$id}}?{{user.uid}}">{{session.title}}</a></p>
+                            <p class="col-md-3">Last edited {{session.lastChanged | date:'short'}}</p>
+                            <p class="col-md-6 fork-detail" ng-hide="session.forkedFrom">Created {{session.created | date:'short'}}</p>
+                            <p class="col-md-6  fork-detail" ng-show="session.forkedFrom">
+                                <a href="console.html?{{session.forkedFrom.split('|')[1]}}?{{session.forkedFrom.split('|')[0]}}">
+                                    Forked from {{session.forkedFrom.split('|')[0]}}: {{session.forkedFrom.split('|')[1]}}
+                                </a>
+                            </p>
                             <button type="button" data-toggle="modal" data-target="#editModal" class="btn btn-default btn-sm" ng-click="setActive(session.$id, session, false)">
                                 <span class="glyphicon glyphicon-info-sign" ></span>
                             </button>
                         </div>
                         <div class="file-row row" ng-repeat="session in myPublicSessions">
-                            <p class="col-md-3 title"><a href="console.html?{{session.$id}}?{{user.uid}}">{{session.title}}</a></p>
-                            <p class="col-md-4">Last edited {{session.lastChanged | date:'short'}}</p>
-                            <p class="col-md-4  fork-detail">Forked from someoneImportant022</p>
+                            <p class="col-md-2 title"><a href="console.html?{{session.$id}}?{{user.uid}}">{{session.title}}</a></p>
+                            <p class="col-md-3">Last edited {{session.lastChanged | date:'short'}}</p>
+                            <p class="col-md-6 fork-detail" ng-hide="session.forkedFrom">Created {{session.created | date:'short'}}</p>
+                            <p class="col-md-6  fork-detail" ng-show="session.forkedFrom">
+                                <a href="console.html?{{session.forkedFrom.split('|')[1]}}?{{session.forkedFrom.split('|')[0]}}">
+                                    Forked from {{session.forkedFrom.split('|')[0]}}: {{session.forkedFrom.split('|')[1]}}
+                                </a>
+                            </p>
                             <button type="button" data-toggle="modal" data-target="#editModal" class="btn btn-default btn-sm" ng-click="setActive(session.$id, session, true)">
                                 <span class="glyphicon glyphicon-info-sign" ></span>
                             </button>
@@ -82,9 +92,14 @@
                         <h2>Shared Code</h2>
                         <hr>
                         <div class="file-row row" ng-repeat="session in myPublicSessions">
-                            <p class="col-md-3 title"><a href="console.html?{{session.$id}}?{{user.uid}}">{{session.title}}</a></p>
-                            <p class="col-md-4">Last edited {{session.lastChanged | date:'short'}}</p>
-                            <p class="col-md-4 fork-detail">Forked from someoneImportant021</p>
+                            <p class="col-md-2 title"><a href="console.html?{{session.$id}}?{{user.uid}}">{{session.title}}</a></p>
+                            <p class="col-md-3">Last edited {{session.lastChanged | date:'short'}}</p>
+                            <p class="col-md-6 fork-detail" ng-hide="session.forkedFrom">Created {{session.created | date:'short'}}</p>
+                            <p class="col-md-6  fork-detail" ng-show="session.forkedFrom">
+                                <a href="console.html?{{session.forkedFrom.split('|')[1]}}?{{session.forkedFrom.split('|')[0]}}">
+                                    Forked from {{session.forkedFrom.split('|')[0]}}: {{session.forkedFrom.split('|')[1]}}
+                                </a>
+                            </p>
                             <button type="button" data-toggle="modal" data-target="#editModal" class="btn btn-default btn-sm" ng-click="setActive(session.$id, session, true)">
                                 <span class="glyphicon glyphicon-info-sign" ></span>
                             </button>

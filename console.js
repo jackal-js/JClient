@@ -5,6 +5,8 @@ require(["knockout-2.2.1",
          "sheut/step", 
          "sheut/run", 
          "sheut/operations/evaluation", 
+         "sheut/breakpoint",
+         "sheut/state",
          "model", 
          "object_explorer"],
 function(ko, 
@@ -12,6 +14,8 @@ function(ko,
          step, 
          run, 
          evaluate, 
+         breakpoint,
+         state,
          atum_debug_model, 
          object_explorer) {
 
@@ -31,10 +35,45 @@ var id = (function(x) {
             $("#output > ul").scrollTop($("#output > ul")[0].scrollHeight);
         })
     });
+    
+    var debuggerState = state.Debugger.initial;
+    var bpArray = [];
+    
     var cm = CodeMirror(document.getElementById("input"), ({
         "mode": "javascript",
-        "lineNumbers": true
+        "lineNumbers": true,
+        "gutters": ["breakpoints", "CodeMirror-linenumbers"]
     }));
+    cm.on("gutterClick", function(codeMirror, n){
+       var info = codeMirror.lineInfo(n);
+       codeMirror.setGutterMarker(n, "breakpoints", info.gutterMarkers ? clearMarker(n) : makeMarker(n));
+    });
+    
+    function makeMarker(n) {
+        var marker  = document.createElement("div");
+        marker.style.color = "#822";
+        marker.innerHTML = "&#149;";
+        marker.style.fontSize = "1.5em";
+        var bp = breakpoint.create(breakpoint.unconditional(n+1));
+        var bid = Math.random().toString(36).substr(2,9);
+        var record = {id: bid, linenumber: n+1};
+        bpArray.push(record);
+        debuggerState = state.addBreakpoint(debuggerState, bid, bp);
+        //debuggerState = debug.beginInput(debuggerState, "PROGRAM");
+        return marker;
+    }
+    
+    function clearMarker(n){
+        for(var x in bpArray){
+            if(n==bpArray[x].linenumber){
+                debuggerState = state.removeBreakpoint(debuggerState, bpArray[x].id);
+                var index = bpArray.indexOf(bpArray[x]);
+                bpArray.splice(index, 1);
+            }
+        }
+        return null;
+    }
+    
     var doc = cm.doc;
     var interactive = CodeMirror(document.getElementById("output-interactive-textarea"), ({
         "mode": "javascript",
@@ -62,7 +101,7 @@ var id = (function(x) {
                 if (model.debug()) {
                     run.evaluate(model.debug(), evaluate.evaluateInput(input), writeOut, writeError);
                 } else {
-                    step.finish(debug.beginInput(input, writeOut, writeError));
+                    step.finish(debug.beginInitialInput(input, writeOut, writeError));
                 }
 
             }
@@ -127,14 +166,17 @@ var id = (function(x) {
         $("#output > ul").on("accordionactivate", ".object-browser", (function(event, ui) {
             return $("#output > ul").scrollTop($(this).offset().top);
         }));
-        $("button#run-button").button().click((function(e) {
-            var input = doc.getValue();
-            model.debug(debug.beginInput(input, out.write, errorOut.write));
-            model.finish();
-        }));
+//        $("button#run-button").button().click((function(e) {
+//            var input = doc.getValue();
+//            model.debug(debug.beginInitialInput(input, out.write, errorOut.write));
+//            model.finish();
+//        }));
         $("button#debug-button").button().click((function(e) {
             var input = doc.getValue();
-            model.debug(debug.beginInput(input, out.write, errorOut.write));
+            //debuggerState = state.addBreakpoint(debuggerState, Math.random().toString(36).substr(2,9), breakpoint.create(breakpoint.unconditional(doc.lastLine())));
+            //model.debug(debug.beginInitialInput(input, out.write, errorOut.write));
+            model.debug(debug.beginInput(debuggerState, input, out.write, errorOut.write));
+            
         }));
         stopButton.button(({
             "disabled": true
